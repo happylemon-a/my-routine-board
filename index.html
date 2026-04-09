@@ -8,21 +8,16 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #ede8df; min-height: 100vh; }
 #app { display: flex; flex-direction: column; height: 100vh; }
-
 .toolbar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 16px;
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(8px);
-  border-bottom: 0.5px solid rgba(0,0,0,0.1);
-  flex-wrap: wrap;
+  display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+  background: rgba(255,255,255,0.82); backdrop-filter: blur(8px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.1); flex-wrap: wrap;
   position: sticky; top: 0; z-index: 500;
 }
 .toolbar-title { font-size: 14px; font-weight: 600; color: #3a3530; margin-right: 4px; }
 .btn {
-  font-size: 12px; padding: 6px 13px;
-  border-radius: 7px; border: 0.5px solid rgba(0,0,0,0.18);
-  cursor: pointer; background: white; color: #333;
+  font-size: 12px; padding: 6px 13px; border-radius: 7px;
+  border: 0.5px solid rgba(0,0,0,0.18); cursor: pointer; background: white; color: #333;
   transition: background 0.15s, transform 0.1s; white-space: nowrap;
 }
 .btn:hover { background: #f0ece4; }
@@ -32,32 +27,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .btn.gcal { background: #e8f0fe; color: #1a73e8; border-color: #c5d6f8; }
 .btn.gcal:hover { background: #d2e3fc; }
 .btn.gcal.connected { background: #e6f4ea; color: #1e7e34; border-color: #a8d5b5; }
-
-.status-badge {
-  font-size: 11px; padding: 4px 11px; border-radius: 20px; font-weight: 500; margin-left: 4px;
-}
+.status-badge { font-size: 11px; padding: 4px 11px; border-radius: 20px; font-weight: 500; margin-left: 4px; }
 .status-badge.locked { background: #fde68a; color: #92400e; }
 .status-badge.unlocked { background: #d1fae5; color: #065f46; }
 .status-badge.saving { background: #dbeafe; color: #1e40af; }
 .status-badge.saved { background: #d1fae5; color: #065f46; }
 .status-badge.error { background: #fee2e2; color: #991b1b; }
 .ml-auto { margin-left: auto; }
-
-#board {
-  flex: 1; position: relative; overflow: auto;
-  background: #ede8df;
-  background-image: radial-gradient(circle, #c8bfad 1px, transparent 1px);
-  background-size: 28px 28px;
-}
+#board { flex: 1; position: relative; overflow: auto; background: #ede8df; background-image: radial-gradient(circle, #c8bfad 1px, transparent 1px); background-size: 28px 28px; }
 #canvas { position: relative; width: 100%; min-height: calc(100vh - 54px); }
-
 .note {
-  position: absolute; width: 178px; min-height: 188px;
-  padding: 14px 14px 14px; border-radius: 3px;
-  box-shadow: 3px 4px 12px rgba(0,0,0,0.15), 1px 1px 3px rgba(0,0,0,0.08);
-  cursor: grab; transition: box-shadow 0.15s;
-  display: flex; flex-direction: column; gap: 5px;
-  touch-action: none;
+  position: absolute; width: 178px; min-height: 188px; padding: 14px;
+  border-radius: 3px; box-shadow: 3px 4px 12px rgba(0,0,0,0.15), 1px 1px 3px rgba(0,0,0,0.08);
+  cursor: grab; transition: box-shadow 0.15s; display: flex; flex-direction: column; gap: 5px; touch-action: none;
 }
 .note:active { cursor: grabbing; }
 .note.dragging { box-shadow: 8px 10px 24px rgba(0,0,0,0.25); z-index: 1000; cursor: grabbing; }
@@ -67,92 +49,43 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .note-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; }
-.note-title {
-  font-size: 13px; font-weight: 600; flex: 1;
-  outline: none; background: transparent; border: none;
-  cursor: inherit; font-family: inherit; line-height: 1.35; word-break: break-word;
-}
+.note-title { font-size: 13px; font-weight: 600; flex: 1; outline: none; background: transparent; border: none; cursor: inherit; font-family: inherit; line-height: 1.35; word-break: break-word; }
 .note-title[contenteditable="true"] { border-bottom: 1px dashed rgba(0,0,0,0.2); cursor: text; }
-.note-time {
-  font-size: 11px; opacity: 0.5; outline: none; background: transparent; border: none;
-  cursor: inherit; font-family: inherit; margin-top: -2px;
-}
+.note-time { font-size: 11px; opacity: 0.5; outline: none; background: transparent; border: none; cursor: inherit; font-family: inherit; margin-top: -2px; }
 .note-time[contenteditable="true"] { border-bottom: 1px dashed rgba(0,0,0,0.15); cursor: text; }
-.note-body {
-  font-size: 12px; line-height: 1.65; outline: none; flex: 1;
-  white-space: pre-wrap; word-break: break-word;
-  background: transparent; border: none; cursor: inherit; font-family: inherit;
-}
+.note-body { font-size: 12px; line-height: 1.65; outline: none; flex: 1; white-space: pre-wrap; word-break: break-word; background: transparent; border: none; cursor: inherit; font-family: inherit; }
 .note-body[contenteditable="true"] { cursor: text; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 5px; }
 .note-footer { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
 .color-row { display: flex; gap: 5px; flex-wrap: wrap; }
-.color-dot {
-  width: 16px; height: 16px; border-radius: 50%;
-  cursor: pointer; border: 1.5px solid rgba(0,0,0,0.12); transition: transform 0.1s;
-}
+.color-dot { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; border: 1.5px solid rgba(0,0,0,0.12); transition: transform 0.1s; }
 .color-dot:hover { transform: scale(1.28); }
 .color-dot.selected { border-color: #333; border-width: 2.5px; }
 .note-btn-row { display: flex; gap: 4px; margin-top: 2px; }
-.note-action-btn {
-  font-size: 10px; padding: 3px 7px; border-radius: 5px;
-  border: 0.5px solid rgba(0,0,0,0.15); cursor: pointer;
-  background: rgba(255,255,255,0.6); color: rgba(0,0,0,0.6);
-  transition: background 0.12s; white-space: nowrap;
-}
+.note-action-btn { font-size: 10px; padding: 3px 7px; border-radius: 5px; border: 0.5px solid rgba(0,0,0,0.15); cursor: pointer; background: rgba(255,255,255,0.6); color: rgba(0,0,0,0.6); transition: background 0.12s; white-space: nowrap; }
 .note-action-btn.cal { background: rgba(232,240,254,0.8); color: #1a73e8; border-color: #c5d6f8; }
 .note-action-btn.cal:hover { background: rgba(210,227,252,0.95); }
 .note-action-btn.cal.done { background: rgba(230,244,234,0.8); color: #1e7e34; border-color: #a8d5b5; }
-.del-btn {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: rgba(0,0,0,0.1); border: none; cursor: pointer;
-  font-size: 10px; color: rgba(0,0,0,0.4);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: background 0.12s; line-height: 1;
-}
+.del-btn { width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 10px; color: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.12s; line-height: 1; }
 .del-btn:hover { background: #ef4444; color: white; }
-.empty-state {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  text-align: center; color: #a09880; pointer-events: none;
-}
+.empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #a09880; pointer-events: none; }
 .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
 .empty-state p { font-size: 14px; }
-
-.modal-overlay {
-  position: absolute; inset: 0; background: rgba(0,0,0,0.35);
-  display: flex; align-items: center; justify-content: center; z-index: 2000;
-}
-.modal {
-  background: white; border-radius: 14px; padding: 22px 24px;
-  width: 300px; max-width: 92vw;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-}
+.modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.modal { background: white; border-radius: 14px; padding: 22px 24px; width: 300px; max-width: 92vw; box-shadow: 0 8px 32px rgba(0,0,0,0.18); max-height: 90vh; overflow-y: auto; }
 .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #1a73e8; }
 .modal label { font-size: 12px; color: #555; display: block; margin-bottom: 4px; margin-top: 12px; }
-.modal input, .modal select {
-  width: 100%; padding: 7px 10px; border-radius: 7px;
-  border: 0.5px solid #ddd; font-size: 13px; font-family: inherit;
-  outline: none; background: #fafafa;
-}
+.modal input, .modal select { width: 100%; padding: 7px 10px; border-radius: 7px; border: 0.5px solid #ddd; font-size: 13px; font-family: inherit; outline: none; background: #fafafa; }
 .modal input:focus, .modal select:focus { border-color: #1a73e8; background: white; }
 .days-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-.day-chip {
-  padding: 4px 10px; border-radius: 20px; font-size: 12px;
-  border: 0.5px solid #ddd; cursor: pointer; background: #f5f5f5; color: #555;
-  transition: all 0.12s; user-select: none;
-}
+.day-chip { padding: 4px 10px; border-radius: 20px; font-size: 12px; border: 0.5px solid #ddd; cursor: pointer; background: #f5f5f5; color: #555; transition: all 0.12s; user-select: none; }
 .day-chip.on { background: #1a73e8; color: white; border-color: #1a73e8; }
 .modal-btns { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
-.modal-btns button {
-  padding: 7px 16px; border-radius: 7px; font-size: 13px; cursor: pointer;
-  border: 0.5px solid #ddd; background: white; color: #333; transition: background 0.12s;
-}
+.modal-btns button { padding: 7px 16px; border-radius: 7px; font-size: 13px; cursor: pointer; border: 0.5px solid #ddd; background: white; color: #333; transition: background 0.12s; }
 .modal-btns .confirm { background: #1a73e8; color: white; border-color: #1a73e8; }
 .modal-btns .confirm:hover { background: #1558b0; }
 .modal-btns button:not(.confirm):hover { background: #f5f5f5; }
-
 @media (max-width: 480px) {
   .toolbar { padding: 8px 10px; gap: 6px; }
-  .toolbar-title { font-size: 13px; }
   .note { width: 155px; min-height: 170px; padding: 12px; }
 }
 </style>
@@ -178,7 +111,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <script src="https://accounts.google.com/gsi/client" async></script>
-
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -191,7 +123,6 @@ const firebaseConfig = {
   messagingSenderId: "996849151037",
   appId: "1:996849151037:web:0006632d5fcc096ad60e54",
 };
-
 const GCAL_CLIENT_ID = '995081959362-mrbvu6gpugp151nreogfuuvacbegefdn.apps.googleusercontent.com';
 const GCAL_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
 
@@ -200,130 +131,107 @@ const db = getFirestore(fbApp);
 const BOARD_DOC = doc(db, 'boards', 'main');
 
 const COLORS = [
-  { bg: '#FFF176', text: '#4E342E', time: '#795548' },
-  { bg: '#CCFF90', text: '#1B5E20', time: '#2E7D32' },
-  { bg: '#B3E5FC', text: '#01579B', time: '#0277BD' },
-  { bg: '#FCE4EC', text: '#880E4F', time: '#AD1457' },
-  { bg: '#FFE0B2', text: '#BF360C', time: '#D84315' },
-  { bg: '#E1BEE7', text: '#4A148C', time: '#6A1B9A' },
-  { bg: '#B2EBF2', text: '#006064', time: '#00838F' },
-  { bg: '#F0F4C3', text: '#33691E', time: '#558B2F' },
+  { bg:'#FFF176', text:'#4E342E', time:'#795548' },
+  { bg:'#CCFF90', text:'#1B5E20', time:'#2E7D32' },
+  { bg:'#B3E5FC', text:'#01579B', time:'#0277BD' },
+  { bg:'#FCE4EC', text:'#880E4F', time:'#AD1457' },
+  { bg:'#FFE0B2', text:'#BF360C', time:'#D84315' },
+  { bg:'#E1BEE7', text:'#4A148C', time:'#6A1B9A' },
+  { bg:'#B2EBF2', text:'#006064', time:'#00838F' },
+  { bg:'#F0F4C3', text:'#33691E', time:'#558B2F' },
 ];
-
 const DEFAULTS = [
   { id:'n1', title:'🌅 아침 루틴', time:'06:00 – 07:30', body:'기상 후 물 한 잔\n5분 스트레칭\n샤워 & 세면\n아침 식사\n오늘 할 일 체크', ci:0, x:30,  y:20,  rot:-2.2 },
-  { id:'n2', title:'💪 운동 루틴', time:'07:30 – 08:30', body:'러닝 30분\n코어 운동 15분\n폼롤러 마무리\n단백질 쉐이크',             ci:1, x:228, y:10,  rot:1.8  },
-  { id:'n3', title:'📚 집중 블록', time:'09:00 – 12:00', body:'핵심 작업 1개\n25분 집중 × 4\n메모 & 정리\n이메일 확인',            ci:2, x:420, y:22,  rot:0.7  },
-  { id:'n4', title:'🍱 점심 루틴', time:'12:00 – 13:00', body:'산책 20분\n균형 잡힌 식사\n눈 쉬어주기\n짧은 낮잠 (선택)',          ci:3, x:80,  y:250, rot:-1   },
+  { id:'n2', title:'💪 운동 루틴', time:'07:30 – 08:30', body:'러닝 30분\n코어 운동 15분\n폼롤러 마무리\n단백질 쉐이크',              ci:1, x:228, y:10,  rot:1.8  },
+  { id:'n3', title:'📚 집중 블록', time:'09:00 – 12:00', body:'핵심 작업 1개\n25분 집중 × 4\n메모 & 정리\n이메일 확인',             ci:2, x:420, y:22,  rot:0.7  },
+  { id:'n4', title:'🍱 점심 루틴', time:'12:00 – 13:00', body:'산책 20분\n균형 잡힌 식사\n눈 쉬어주기\n짧은 낮잠 (선택)',           ci:3, x:80,  y:250, rot:-1   },
   { id:'n5', title:'🌙 저녁 루틴', time:'21:00 – 22:30', body:'하루 회고 5분\n내일 할 일 정리\n독서 30분\n디지털 디톡스\n취침 준비', ci:4, x:320, y:240, rot:3    },
 ];
-
 const DAY_LABELS = ['일','월','화','수','목','금','토'];
 const DAY_RRULE  = ['SU','MO','TU','WE','TH','FR','SA'];
 
-let locked = true;
-let notes = {};
-let zTop = 10;
-let saveTimer = null;
-let localChange = false;
-let gcalToken = null;
-let tokenClient = null;
+let locked=true, notes={}, zTop=10, saveTimer=null, localChange=false, gcalToken=null, tokenClient=null;
 
-const canvas      = document.getElementById('canvas');
-const emptyState  = document.getElementById('emptyState');
-const lockBtn     = document.getElementById('lockBtn');
-const lockBadge   = document.getElementById('lockBadge');
-const syncBadge   = document.getElementById('syncBadge');
-const addBtn      = document.getElementById('addBtn');
-const calLoginBtn = document.getElementById('calLoginBtn');
+const canvas=document.getElementById('canvas'), emptyState=document.getElementById('emptyState');
+const lockBtn=document.getElementById('lockBtn'), lockBadge=document.getElementById('lockBadge');
+const syncBadge=document.getElementById('syncBadge'), addBtn=document.getElementById('addBtn');
+const calLoginBtn=document.getElementById('calLoginBtn');
 
-function setSyncBadge(state) {
-  const map = { saving:['saving','저장 중...'], saved:['saved','✓ 저장됨'], error:['error','⚠ 저장 실패'] };
-  const [cls,txt] = map[state];
-  syncBadge.className = `status-badge ${cls} ml-auto`;
-  syncBadge.textContent = txt;
+const pad = n => String(n).padStart(2,'0');
+function todayStr() {
+  const d=new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 
+function setSyncBadge(s) {
+  const m={saving:['saving','저장 중...'],saved:['saved','✓ 저장됨'],error:['error','⚠ 저장 실패']};
+  syncBadge.className=`status-badge ${m[s][0]} ml-auto`; syncBadge.textContent=m[s][1];
+}
 function setLock(val) {
-  locked = val;
-  lockBtn.textContent = locked ? '🔒 잠금 ON' : '🔓 잠금 OFF';
-  lockBadge.className = `status-badge ${locked ? 'locked' : 'unlocked'}`;
-  lockBadge.textContent = locked ? '🔒 이동만 가능' : '🔓 편집 가능';
-  Object.values(notes).forEach(n => applyLock(n));
+  locked=val;
+  lockBtn.textContent=locked?'🔒 잠금 ON':'🔓 잠금 OFF';
+  lockBadge.className=`status-badge ${locked?'locked':'unlocked'}`;
+  lockBadge.textContent=locked?'🔒 이동만 가능':'🔓 편집 가능';
+  Object.values(notes).forEach(n=>applyLock(n));
 }
-lockBtn.addEventListener('click', () => setLock(!locked));
+lockBtn.addEventListener('click',()=>setLock(!locked));
 
 function applyLock(n) {
-  const editable = !locked;
-  n.el.querySelector('.note-title').contentEditable = editable;
-  n.el.querySelector('.note-time').contentEditable  = editable;
-  n.el.querySelector('.note-body').contentEditable  = editable;
-  n.el.querySelector('.note-footer').style.display  = editable ? 'flex' : 'none';
+  const e=!locked;
+  n.el.querySelector('.note-title').contentEditable=e;
+  n.el.querySelector('.note-time').contentEditable=e;
+  n.el.querySelector('.note-body').contentEditable=e;
+  n.el.querySelector('.note-footer').style.display=e?'flex':'none';
 }
-
 function scheduleSave() {
-  if (!localChange) return;
-  clearTimeout(saveTimer);
-  setSyncBadge('saving');
-  saveTimer = setTimeout(saveToFirebase, 1200);
+  if(!localChange) return;
+  clearTimeout(saveTimer); setSyncBadge('saving');
+  saveTimer=setTimeout(saveToFirebase,1200);
 }
-
 async function saveToFirebase() {
   try {
-    const data = Object.values(notes).map(n => ({
-      id:    n.id,
-      title: n.el.querySelector('.note-title').innerText,
-      time:  n.el.querySelector('.note-time').innerText,
-      body:  n.el.querySelector('.note-body').innerText,
-      ci: n.ci, rot: n.rot,
-      x: parseInt(n.el.style.left)||0,
-      y: parseInt(n.el.style.top)||0,
-      z: parseInt(n.el.style.zIndex)||10,
+    const data=Object.values(notes).map(n=>({
+      id:n.id, title:n.el.querySelector('.note-title').innerText,
+      time:n.el.querySelector('.note-time').innerText, body:n.el.querySelector('.note-body').innerText,
+      ci:n.ci, rot:n.rot, x:parseInt(n.el.style.left)||0, y:parseInt(n.el.style.top)||0, z:parseInt(n.el.style.zIndex)||10,
     }));
-    await setDoc(BOARD_DOC, { notes: data, updatedAt: Date.now() });
-    setSyncBadge('saved');
-    localChange = false;
-  } catch(e) { console.error(e); setSyncBadge('error'); }
+    await setDoc(BOARD_DOC,{notes:data,updatedAt:Date.now()});
+    setSyncBadge('saved'); localChange=false;
+  } catch(e){ console.error(e); setSyncBadge('error'); }
 }
 
 function tryInitGcal() {
-  if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: GCAL_CLIENT_ID,
-      scope: GCAL_SCOPE,
-      callback: (resp) => {
-        if (resp.error) { alert('Google 로그인 실패: ' + resp.error); return; }
-        gcalToken = resp.access_token;
-        calLoginBtn.textContent = '📅 캘린더 연결됨';
-        calLoginBtn.classList.add('connected');
+  if(typeof google!=='undefined'&&google.accounts&&google.accounts.oauth2) {
+    tokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:GCAL_CLIENT_ID, scope:GCAL_SCOPE,
+      callback:(resp)=>{
+        if(resp.error){alert('Google 로그인 실패: '+resp.error);return;}
+        gcalToken=resp.access_token;
+        calLoginBtn.textContent='📅 캘린더 연결됨'; calLoginBtn.classList.add('connected');
       },
     });
-  } else {
-    setTimeout(tryInitGcal, 800);
-  }
+  } else { setTimeout(tryInitGcal,800); }
 }
-
-calLoginBtn.addEventListener('click', () => {
-  if (!tokenClient) { alert('Google 라이브러리 로딩 중이에요. 잠시 후 다시 눌러주세요.'); return; }
-  if (gcalToken)    { alert('이미 Google 캘린더에 연결되어 있어요!'); return; }
+calLoginBtn.addEventListener('click',()=>{
+  if(!tokenClient){alert('Google 라이브러리 로딩 중이에요. 잠시 후 다시 눌러주세요.');return;}
+  if(gcalToken){alert('이미 Google 캘린더에 연결되어 있어요!');return;}
   tokenClient.requestAccessToken();
 });
 
 function showCalModal(nd) {
-  if (!gcalToken) {
-    alert('먼저 상단의 📅 Google 로그인 버튼을 눌러주세요!');
-    return;
-  }
-  const title   = nd.el.querySelector('.note-title').innerText;
-  const timeStr = nd.el.querySelector('.note-time').innerText;
+  if(!gcalToken){alert('먼저 상단의 📅 Google 로그인 버튼을 눌러주세요!');return;}
+  const title=nd.el.querySelector('.note-title').innerText;
+  const timeStr=nd.el.querySelector('.note-time').innerText;
+  let startH='09',startM='00',endH='10',endM='00';
+  const tm=timeStr.match(/(\d{1,2}):(\d{2})\s*[–\-]\s*(\d{1,2}):(\d{2})/);
+  if(tm){startH=tm[1].padStart(2,'0');startM=tm[2];endH=tm[3].padStart(2,'0');endM=tm[4];}
 
-  let startH='09', startM='00', endH='10', endM='00';
-  const tm = timeStr.match(/(\d{1,2}):(\d{2})\s*[–\-]\s*(\d{1,2}):(\d{2})/);
-  if (tm) { startH=tm[1].padStart(2,'0'); startM=tm[2]; endH=tm[3].padStart(2,'0'); endM=tm[4]; }
+  const today=todayStr();
+  const defaultUntil=`${new Date().getFullYear()}-12-31`;
 
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.innerHTML = `
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.innerHTML=`
     <div class="modal">
       <h3>📅 캘린더에 등록</h3>
       <label>일정 제목</label>
@@ -336,6 +244,12 @@ function showCalModal(nd) {
       <div class="days-row">
         ${DAY_LABELS.map((d,i)=>`<div class="day-chip" data-i="${i}">${d}</div>`).join('')}
       </div>
+      <label>반복 종료</label>
+      <select id="m-repeat-type">
+        <option value="until">날짜 지정</option>
+        <option value="forever">무기한 반복</option>
+      </select>
+      <input id="m-until" type="date" value="${defaultUntil}" min="${today}" style="margin-top:6px;" />
       <label>알림 (분 전)</label>
       <select id="m-remind">
         <option value="0">없음</option>
@@ -351,63 +265,66 @@ function showCalModal(nd) {
     </div>`;
 
   document.getElementById('board').appendChild(overlay);
-  const chips = overlay.querySelectorAll('.day-chip');
-  chips.forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
-  overlay.querySelector('#m-cancel').addEventListener('click', () => overlay.remove());
+  const chips=overlay.querySelectorAll('.day-chip');
+  chips.forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+  overlay.querySelector('#m-cancel').addEventListener('click',()=>overlay.remove());
 
-  overlay.querySelector('#m-confirm').addEventListener('click', async () => {
-    const evTitle   = overlay.querySelector('#m-title').value.trim() || title;
-    const startTime = overlay.querySelector('#m-start').value;
-    const endTime   = overlay.querySelector('#m-end').value;
-    const remindMin = parseInt(overlay.querySelector('#m-remind').value);
-    const selDays   = [...chips].filter(c=>c.classList.contains('on')).map(c=>DAY_RRULE[parseInt(c.dataset.i)]);
+  const repeatTypeEl=overlay.querySelector('#m-repeat-type');
+  const untilEl=overlay.querySelector('#m-until');
+  repeatTypeEl.addEventListener('change',()=>{
+    untilEl.style.display=repeatTypeEl.value==='until'?'block':'none';
+  });
 
-    const today = new Date();
-    const pad = n => String(n).padStart(2,'0');
-    const ymd = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  overlay.querySelector('#m-confirm').addEventListener('click', async ()=>{
+    const evTitle=overlay.querySelector('#m-title').value.trim()||title;
+    const startTime=overlay.querySelector('#m-start').value;
+    const endTime=overlay.querySelector('#m-end').value;
+    const remindMin=parseInt(overlay.querySelector('#m-remind').value);
+    const repeatType=repeatTypeEl.value;
+    const untilDate=untilEl.value;
+    const selDays=[...chips].filter(c=>c.classList.contains('on')).map(c=>DAY_RRULE[parseInt(c.dataset.i)]);
 
-    const event = {
-      summary: evTitle,
-      start: { dateTime: `${ymd}T${startTime}:00`, timeZone: 'Asia/Seoul' },
-      end:   { dateTime: `${ymd}T${endTime}:00`,   timeZone: 'Asia/Seoul' },
-      reminders: {
-        useDefault: false,
-        overrides: remindMin > 0 ? [{ method:'popup', minutes:remindMin }] : [],
-      },
+    const event={
+      summary:evTitle,
+      start:{dateTime:`${today}T${startTime}:00`,timeZone:'Asia/Seoul'},
+      end:  {dateTime:`${today}T${endTime}:00`,  timeZone:'Asia/Seoul'},
+      reminders:{useDefault:false, overrides:remindMin>0?[{method:'popup',minutes:remindMin}]:[]},
     };
-    if (selDays.length > 0) {
-      event.recurrence = [`RRULE:FREQ=WEEKLY;BYDAY=${selDays.join(',')}`];
+    if(selDays.length>0){
+      let rrule=`RRULE:FREQ=WEEKLY;BYDAY=${selDays.join(',')}`;
+      if(repeatType==='until'&&untilDate){
+        rrule+=`;UNTIL=${untilDate.replace(/-/g,'')}T235959Z`;
+      }
+      event.recurrence=[rrule];
     }
 
     try {
-      const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-        method: 'POST',
-        headers: { Authorization:`Bearer ${gcalToken}`, 'Content-Type':'application/json' },
-        body: JSON.stringify(event),
+      const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{
+        method:'POST',
+        headers:{Authorization:`Bearer ${gcalToken}`,'Content-Type':'application/json'},
+        body:JSON.stringify(event),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if(!res.ok) throw new Error(await res.text());
       overlay.remove();
-      const calBtn = nd.el.querySelector('.note-action-btn.cal');
-      if (calBtn) { calBtn.textContent = '✓ 캘린더 등록됨'; calBtn.classList.add('done'); }
-      alert(`✅ "${evTitle}" 이(가) Google 캘린더에 등록됐어요!\n알림도 설정됩니다 📱`);
-    } catch(e) {
+      const calBtn=nd.el.querySelector('.note-action-btn.cal');
+      if(calBtn){calBtn.textContent='✓ 캘린더 등록됨';calBtn.classList.add('done');}
+      const untilMsg=repeatType==='until'?` (${untilDate}까지 반복)`:' (무기한 반복)';
+      alert(`✅ "${evTitle}" Google 캘린더에 등록됐어요!\n${untilMsg} 📱`);
+    } catch(e){
       console.error(e);
       alert('캘린더 등록 실패. 다시 로그인 후 시도해주세요.');
-      gcalToken = null;
-      calLoginBtn.textContent = '📅 Google 로그인';
-      calLoginBtn.classList.remove('connected');
+      gcalToken=null; calLoginBtn.textContent='📅 Google 로그인'; calLoginBtn.classList.remove('connected');
       overlay.remove();
     }
   });
 }
 
 function makeNote(data) {
-  const c = COLORS[data.ci % COLORS.length];
-  const el = document.createElement('div');
-  el.className = 'note';
-  el.style.cssText = `background:${c.bg};left:${data.x}px;top:${data.y}px;transform:rotate(${data.rot}deg);z-index:${data.z||++zTop};`;
-
-  el.innerHTML = `
+  const c=COLORS[data.ci%COLORS.length];
+  const el=document.createElement('div');
+  el.className='note';
+  el.style.cssText=`background:${c.bg};left:${data.x}px;top:${data.y}px;transform:rotate(${data.rot}deg);z-index:${data.z||++zTop};`;
+  el.innerHTML=`
     <div class="note-header">
       <div class="note-title" style="color:${c.text}">${escHtml(data.title)}</div>
       <button class="del-btn" title="삭제">✕</button>
@@ -416,137 +333,86 @@ function makeNote(data) {
     <div class="note-body" style="color:${c.text}">${escHtml(data.body)}</div>
     <div class="note-footer" style="display:none;">
       <div class="color-row">${COLORS.map((cc,i)=>`<div class="color-dot${i===data.ci?' selected':''}" style="background:${cc.bg}" data-i="${i}"></div>`).join('')}</div>
-      <div class="note-btn-row">
-        <button class="note-action-btn cal">📅 캘린더 등록</button>
-      </div>
+      <div class="note-btn-row"><button class="note-action-btn cal">📅 캘린더 등록</button></div>
     </div>`;
-
-  const nd = { id: data.id, el, ci: data.ci, rot: data.rot };
-  notes[data.id] = nd;
-
-  el.querySelector('.del-btn').addEventListener('click', e => {
-    e.stopPropagation();
-    if (locked) return;
-    canvas.removeChild(el); delete notes[data.id];
-    updateEmpty(); localChange = true; scheduleSave();
+  const nd={id:data.id,el,ci:data.ci,rot:data.rot};
+  notes[data.id]=nd;
+  el.querySelector('.del-btn').addEventListener('click',e=>{
+    e.stopPropagation(); if(locked) return;
+    canvas.removeChild(el); delete notes[data.id]; updateEmpty(); localChange=true; scheduleSave();
   });
-
-  el.querySelectorAll('.color-dot').forEach(dot => {
-    dot.addEventListener('click', e => {
-      e.stopPropagation();
-      if (locked) return;
-      const i = parseInt(dot.dataset.i);
-      const nc = COLORS[i];
-      el.style.background = nc.bg;
-      el.querySelector('.note-title').style.color = nc.text;
-      el.querySelector('.note-time').style.color  = nc.time;
-      el.querySelector('.note-body').style.color  = nc.text;
-      el.querySelectorAll('.color-dot').forEach(d => d.classList.toggle('selected', parseInt(d.dataset.i)===i));
-      nd.ci = i; localChange = true; scheduleSave();
+  el.querySelectorAll('.color-dot').forEach(dot=>{
+    dot.addEventListener('click',e=>{
+      e.stopPropagation(); if(locked) return;
+      const i=parseInt(dot.dataset.i); const nc=COLORS[i];
+      el.style.background=nc.bg;
+      el.querySelector('.note-title').style.color=nc.text;
+      el.querySelector('.note-time').style.color=nc.time;
+      el.querySelector('.note-body').style.color=nc.text;
+      el.querySelectorAll('.color-dot').forEach(d=>d.classList.toggle('selected',parseInt(d.dataset.i)===i));
+      nd.ci=i; localChange=true; scheduleSave();
     });
   });
-
-  el.querySelector('.note-action-btn.cal').addEventListener('click', e => {
-    e.stopPropagation(); showCalModal(nd);
+  el.querySelector('.note-action-btn.cal').addEventListener('click',e=>{e.stopPropagation();showCalModal(nd);});
+  ['.note-title','.note-time','.note-body'].forEach(sel=>{
+    el.querySelector(sel).addEventListener('input',()=>{localChange=true;scheduleSave();});
   });
-
-  ['.note-title','.note-time','.note-body'].forEach(sel => {
-    el.querySelector(sel).addEventListener('input', () => { localChange = true; scheduleSave(); });
-  });
-
-  setupDrag(el, nd);
-  canvas.appendChild(el);
-  applyLock(nd);
-  updateEmpty();
+  setupDrag(el,nd); canvas.appendChild(el); applyLock(nd); updateEmpty();
   return nd;
 }
 
-function setupDrag(el, nd) {
-  let dragging=false, sx, sy, ox, oy;
-  function start(cx,cy) {
-    dragging=true; sx=cx; sy=cy;
-    ox=parseInt(el.style.left)||0; oy=parseInt(el.style.top)||0;
-    el.style.zIndex=++zTop; el.classList.add('dragging');
-  }
-  function move(cx,cy) {
-    if (!dragging) return;
-    el.style.left=(ox+cx-sx)+'px'; el.style.top=(oy+cy-sy)+'px';
-  }
-  function end() {
-    if (!dragging) return;
-    dragging=false; el.classList.remove('dragging');
-    localChange=true; scheduleSave();
-  }
-  el.addEventListener('mousedown', e => {
-    if (e.target.contentEditable==='true'||e.target.classList.contains('del-btn')||e.target.classList.contains('color-dot')||e.target.classList.contains('note-action-btn')) return;
-    start(e.clientX,e.clientY); e.preventDefault();
+function setupDrag(el,nd) {
+  let dragging=false,sx,sy,ox,oy;
+  function start(cx,cy){dragging=true;sx=cx;sy=cy;ox=parseInt(el.style.left)||0;oy=parseInt(el.style.top)||0;el.style.zIndex=++zTop;el.classList.add('dragging');}
+  function move(cx,cy){if(!dragging)return;el.style.left=(ox+cx-sx)+'px';el.style.top=(oy+cy-sy)+'px';}
+  function end(){if(!dragging)return;dragging=false;el.classList.remove('dragging');localChange=true;scheduleSave();}
+  el.addEventListener('mousedown',e=>{
+    if(e.target.contentEditable==='true'||e.target.classList.contains('del-btn')||e.target.classList.contains('color-dot')||e.target.classList.contains('note-action-btn'))return;
+    start(e.clientX,e.clientY);e.preventDefault();
   });
-  document.addEventListener('mousemove', e => move(e.clientX,e.clientY));
-  document.addEventListener('mouseup', end);
-  el.addEventListener('touchstart', e => {
-    if (e.target.contentEditable==='true') return;
-    const t=e.touches[0]; start(t.clientX,t.clientY);
-  },{passive:true});
-  el.addEventListener('touchmove', e => {
-    const t=e.touches[0]; move(t.clientX,t.clientY); e.preventDefault();
-  },{passive:false});
-  el.addEventListener('touchend', end);
+  document.addEventListener('mousemove',e=>move(e.clientX,e.clientY));
+  document.addEventListener('mouseup',end);
+  el.addEventListener('touchstart',e=>{if(e.target.contentEditable==='true')return;const t=e.touches[0];start(t.clientX,t.clientY);},{passive:true});
+  el.addEventListener('touchmove',e=>{const t=e.touches[0];move(t.clientX,t.clientY);e.preventDefault();},{passive:false});
+  el.addEventListener('touchend',end);
 }
 
-function updateEmpty() {
-  emptyState.style.display = Object.keys(notes).length===0 ? 'block' : 'none';
-}
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function uid() { return 'n'+Date.now()+Math.random().toString(36).slice(2,6); }
+function updateEmpty(){emptyState.style.display=Object.keys(notes).length===0?'block':'none';}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function uid(){return 'n'+Date.now()+Math.random().toString(36).slice(2,6);}
 
-addBtn.addEventListener('click', () => {
+addBtn.addEventListener('click',()=>{
   const rots=[-2.5,-1.5,-0.5,0.5,1.5,2.5,3];
-  makeNote({
-    id:uid(), title:'📝 새 메모', time:'시간 입력', body:'내용을 입력하세요',
-    ci:Math.floor(Math.random()*COLORS.length),
-    x:40+Math.random()*220, y:40+Math.random()*200,
-    rot:rots[Math.floor(Math.random()*rots.length)], z:++zTop,
-  });
-  if (locked) setLock(false);
-  localChange=true; scheduleSave();
+  makeNote({id:uid(),title:'📝 새 메모',time:'시간 입력',body:'내용을 입력하세요',
+    ci:Math.floor(Math.random()*COLORS.length),x:40+Math.random()*220,y:40+Math.random()*200,
+    rot:rots[Math.floor(Math.random()*rots.length)],z:++zTop});
+  if(locked)setLock(false);
+  localChange=true;scheduleSave();
 });
 
 async function init() {
   setSyncBadge('saving');
   try {
-    const snap = await getDoc(BOARD_DOC);
-    if (snap.exists() && snap.data().notes?.length) {
-      snap.data().notes.forEach(d => makeNote(d));
-    } else {
-      DEFAULTS.forEach(d => makeNote(d));
-      localChange = true;
-      await saveToFirebase();
-    }
+    const snap=await getDoc(BOARD_DOC);
+    if(snap.exists()&&snap.data().notes?.length){snap.data().notes.forEach(d=>makeNote(d));}
+    else{DEFAULTS.forEach(d=>makeNote(d));localChange=true;await saveToFirebase();}
     setSyncBadge('saved');
-  } catch(e) {
-    console.error(e); DEFAULTS.forEach(d => makeNote(d)); setSyncBadge('error');
-  }
+  } catch(e){console.error(e);DEFAULTS.forEach(d=>makeNote(d));setSyncBadge('error');}
 
-  onSnapshot(BOARD_DOC, snap => {
-    if (localChange || !snap.exists()) return;
-    const incoming = snap.data(); if (!incoming.notes) return;
-    const curIds = new Set(Object.keys(notes));
-    const incIds = new Set(incoming.notes.map(n => n.id));
-    curIds.forEach(id => { if (!incIds.has(id)) { canvas.removeChild(notes[id].el); delete notes[id]; }});
-    incoming.notes.forEach(d => {
-      if (notes[d.id]) {
-        notes[d.id].el.style.left = d.x+'px';
-        notes[d.id].el.style.top  = d.y+'px';
-      } else { makeNote(d); }
+  onSnapshot(BOARD_DOC,snap=>{
+    if(localChange||!snap.exists())return;
+    const inc=snap.data();if(!inc.notes)return;
+    const curIds=new Set(Object.keys(notes));
+    const incIds=new Set(inc.notes.map(n=>n.id));
+    curIds.forEach(id=>{if(!incIds.has(id)){canvas.removeChild(notes[id].el);delete notes[id];}});
+    inc.notes.forEach(d=>{
+      if(notes[d.id]){notes[d.id].el.style.left=d.x+'px';notes[d.id].el.style.top=d.y+'px';}
+      else{makeNote(d);}
     });
     updateEmpty();
   });
-
   tryInitGcal();
 }
-
 init();
 </script>
 </body>
