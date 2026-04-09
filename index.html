@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>루틴 보드</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #ede8df; min-height: 100vh; }
+
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+.toolbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(8px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+  position: sticky; top: 0; z-index: 500;
+}
+
+.toolbar-title {
+  font-size: 14px; font-weight: 600; color: #3a3530; margin-right: 4px;
+}
+
+.btn {
+  font-size: 12px; padding: 6px 13px;
+  border-radius: 7px; border: 0.5px solid rgba(0,0,0,0.18);
+  cursor: pointer; background: white; color: #333;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn:hover { background: #f0ece4; }
+.btn:active { transform: scale(0.97); }
+.btn.primary { background: #3a3530; color: white; border-color: #3a3530; }
+.btn.primary:hover { background: #555; }
+.btn.danger { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+.status-badge {
+  font-size: 11px; padding: 4px 11px; border-radius: 20px; font-weight: 500; margin-left: 4px;
+}
+.status-badge.locked { background: #fde68a; color: #92400e; }
+.status-badge.unlocked { background: #d1fae5; color: #065f46; }
+.status-badge.saving { background: #dbeafe; color: #1e40af; }
+.status-badge.saved { background: #d1fae5; color: #065f46; }
+.status-badge.error { background: #fee2e2; color: #991b1b; }
+
+.ml-auto { margin-left: auto; }
+
+#board {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background: #ede8df;
+  background-image: radial-gradient(circle, #c8bfad 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+#canvas {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 54px);
+}
+
+.note {
+  position: absolute;
+  width: 178px;
+  min-height: 188px;
+  padding: 14px 14px 14px;
+  border-radius: 3px;
+  box-shadow: 3px 4px 12px rgba(0,0,0,0.15), 1px 1px 3px rgba(0,0,0,0.08);
+  cursor: grab;
+  transition: box-shadow 0.15s;
+  display: flex; flex-direction: column; gap: 5px;
+  touch-action: none;
+}
+.note:active { cursor: grabbing; }
+.note.dragging { box-shadow: 8px 10px 24px rgba(0,0,0,0.25); z-index: 1000; cursor: grabbing; }
+
+.note::before {
+  content: '';
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+  width: 36px; height: 17px;
+  background: rgba(255,255,255,0.48);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.note-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; }
+
+.note-title {
+  font-size: 13px; font-weight: 600; flex: 1;
+  outline: none; background: transparent; border: none;
+  cursor: inherit; font-family: inherit; line-height: 1.35;
+  word-break: break-word;
+}
+.note-title[contenteditable="true"] { border-bottom: 1px dashed rgba(0,0,0,0.2); cursor: text; }
+
+.note-time {
+  font-size: 11px; opacity: 0.5;
+  outline: none; background: transparent; border: none;
+  cursor: inherit; font-family: inherit; margin-top: -2px;
+}
+.note-time[contenteditable="true"] { border-bottom: 1px dashed rgba(0,0,0,0.15); cursor: text; }
+
+.note-body {
+  font-size: 12px; line-height: 1.65;
+  outline: none; flex: 1;
+  white-space: pre-wrap; word-break: break-word;
+  background: transparent; border: none;
+  cursor: inherit; font-family: inherit;
+}
+.note-body[contenteditable="true"] {
+  cursor: text;
+  border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 5px;
+}
+
+.note-footer {
+  display: flex; flex-direction: column; gap: 6px; margin-top: 4px;
+}
+
+.color-row { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.color-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  cursor: pointer; border: 1.5px solid rgba(0,0,0,0.12);
+  transition: transform 0.1s;
+}
+.color-dot:hover { transform: scale(1.28); }
+.color-dot.selected { border-color: #333; border-width: 2.5px; }
+
+.del-btn {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(0,0,0,0.1); border: none; cursor: pointer;
+  font-size: 10px; color: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.12s;
+  line-height: 1;
+}
+.del-btn:hover { background: #ef4444; color: white; }
+
+.empty-state {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center; color: #a09880; pointer-events: none;
+}
+.empty-state .icon { font-size: 40px; margin-bottom: 10px; }
+.empty-state p { font-size: 14px; }
+
+@media (max-width: 480px) {
+  .toolbar { padding: 8px 10px; gap: 6px; }
+  .toolbar-title { font-size: 13px; }
+  .note { width: 155px; min-height: 170px; padding: 12px 12px 12px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="toolbar">
+    <span class="toolbar-title">📋 루틴 보드</span>
+    <button class="btn primary" id="addBtn">＋ 메모</button>
+    <button class="btn" id="lockBtn">🔒 잠금 ON</button>
+    <span class="status-badge locked" id="lockBadge">🔒 이동만 가능</span>
+    <span class="status-badge saved ml-auto" id="syncBadge">✓ 저장됨</span>
+  </div>
+  <div id="board">
+    <div id="canvas">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">📝</div>
+        <p>메모 추가 버튼을 눌러 시작하세요</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDg-T04pL1MXolVd5nGVVOELT0n7Xm86Q",
+  authDomain: "my-routine-board.firebaseapp.com",
+  projectId: "my-routine-board",
+  storageBucket: "my-routine-board.firebasestorage.app",
+  messagingSenderId: "996849151037",
+  appId: "1:996849151037:web:0006632d5fcc096ad60e54",
+  measurementId: "G-LVKWXN88V7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const BOARD_DOC = doc(db, 'boards', 'main');
+
+const COLORS = [
+  { bg: '#FFF176', text: '#4E342E', time: '#795548' },
+  { bg: '#CCFF90', text: '#1B5E20', time: '#2E7D32' },
+  { bg: '#B3E5FC', text: '#01579B', time: '#0277BD' },
+  { bg: '#FCE4EC', text: '#880E4F', time: '#AD1457' },
+  { bg: '#FFE0B2', text: '#BF360C', time: '#D84315' },
+  { bg: '#E1BEE7', text: '#4A148C', time: '#6A1B9A' },
+  { bg: '#B2EBF2', text: '#006064', time: '#00838F' },
+  { bg: '#F0F4C3', text: '#33691E', time: '#558B2F' },
+];
+
+const DEFAULTS = [
+  { id: 'n1', title: '🌅 아침 루틴', time: '06:00 – 07:30', body: '기상 후 물 한 잔\n5분 스트레칭\n샤워 & 세면\n아침 식사\n오늘 할 일 체크', ci: 0, x: 30, y: 20, rot: -2.2 },
+  { id: 'n2', title: '💪 운동 루틴', time: '07:30 – 08:30', body: '러닝 30분\n코어 운동 15분\n폼롤러 마무리\n단백질 쉐이크', ci: 1, x: 228, y: 10, rot: 1.8 },
+  { id: 'n3', title: '📚 집중 블록', time: '09:00 – 12:00', body: '핵심 작업 1개\n25분 집중 × 4\n메모 & 정리\n이메일 확인', ci: 2, x: 420, y: 22, rot: 0.7 },
+  { id: 'n4', title: '🍱 점심 루틴', time: '12:00 – 13:00', body: '산책 20분\n균형 잡힌 식사\n눈 쉬어주기\n짧은 낮잠 (선택)', ci: 3, x: 80, y: 250, rot: -1 },
+  { id: 'n5', title: '🌙 저녁 루틴', time: '21:00 – 22:30', body: '하루 회고 5분\n내일 할 일 정리\n독서 30분\n디지털 디톡스\n취침 준비', ci: 4, x: 320, y: 240, rot: 3 },
+];
+
+let locked = true;
+let notes = {};
+let zTop = 10;
+let saveTimer = null;
+let localChange = false;
+
+const canvas = document.getElementById('canvas');
+const emptyState = document.getElementById('emptyState');
+const lockBtn = document.getElementById('lockBtn');
+const lockBadge = document.getElementById('lockBadge');
+const syncBadge = document.getElementById('syncBadge');
+const addBtn = document.getElementById('addBtn');
+
+function setSyncBadge(state) {
+  const map = {
+    saving: ['saving', '저장 중...'],
+    saved:  ['saved',  '✓ 저장됨'],
+    error:  ['error',  '⚠ 저장 실패'],
+  };
+  const [cls, txt] = map[state];
+  syncBadge.className = `status-badge ${cls} ml-auto`;
+  syncBadge.textContent = txt;
+}
+
+function setLock(val) {
+  locked = val;
+  lockBtn.textContent = locked ? '🔒 잠금 ON' : '🔓 잠금 OFF';
+  lockBadge.className = `status-badge ${locked ? 'locked' : 'unlocked'}`;
+  lockBadge.textContent = locked ? '🔒 이동만 가능' : '🔓 편집 가능';
+  Object.values(notes).forEach(n => applyLock(n));
+}
+
+lockBtn.addEventListener('click', () => setLock(!locked));
+
+function applyLock(n) {
+  const editable = !locked;
+  n.el.querySelector('.note-title').contentEditable = editable;
+  n.el.querySelector('.note-time').contentEditable = editable;
+  n.el.querySelector('.note-body').contentEditable = editable;
+  n.el.querySelector('.note-footer').style.display = editable ? 'flex' : 'none';
+}
+
+function scheduleSave() {
+  if (!localChange) return;
+  clearTimeout(saveTimer);
+  setSyncBadge('saving');
+  saveTimer = setTimeout(saveToFirebase, 1200);
+}
+
+async function saveToFirebase() {
+  try {
+    const data = Object.values(notes).map(n => ({
+      id: n.id,
+      title: n.el.querySelector('.note-title').innerText,
+      time: n.el.querySelector('.note-time').innerText,
+      body: n.el.querySelector('.note-body').innerText,
+      ci: n.ci,
+      x: parseInt(n.el.style.left) || 0,
+      y: parseInt(n.el.style.top) || 0,
+      rot: n.rot,
+      z: parseInt(n.el.style.zIndex) || 10,
+    }));
+    await setDoc(BOARD_DOC, { notes: data, updatedAt: Date.now() });
+    setSyncBadge('saved');
+    localChange = false;
+  } catch(e) {
+    console.error(e);
+    setSyncBadge('error');
+  }
+}
+
+function makeNote(data) {
+  const c = COLORS[data.ci % COLORS.length];
+  const el = document.createElement('div');
+  el.className = 'note';
+  el.style.cssText = `background:${c.bg};left:${data.x}px;top:${data.y}px;transform:rotate(${data.rot}deg);z-index:${data.z || ++zTop};`;
+
+  el.innerHTML = `
+    <div class="note-header">
+      <div class="note-title" style="color:${c.text}">${escHtml(data.title)}</div>
+      <button class="del-btn" title="삭제">✕</button>
+    </div>
+    <div class="note-time" style="color:${c.time}">${escHtml(data.time)}</div>
+    <div class="note-body" style="color:${c.text}">${escHtml(data.body)}</div>
+    <div class="note-footer" style="display:none;">
+      <div class="color-row">${COLORS.map((cc,i)=>`<div class="color-dot${i===data.ci?' selected':''}" style="background:${cc.bg}" data-i="${i}"></div>`).join('')}</div>
+    </div>`;
+
+  const nd = { id: data.id, el, ci: data.ci, rot: data.rot };
+  notes[data.id] = nd;
+
+  el.querySelector('.del-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    if (locked) return;
+    canvas.removeChild(el);
+    delete notes[data.id];
+    updateEmpty();
+    localChange = true; scheduleSave();
+  });
+
+  el.querySelectorAll('.color-dot').forEach(dot => {
+    dot.addEventListener('click', e => {
+      e.stopPropagation();
+      if (locked) return;
+      const i = parseInt(dot.dataset.i);
+      const nc = COLORS[i];
+      el.style.background = nc.bg;
+      el.querySelector('.note-title').style.color = nc.text;
+      el.querySelector('.note-time').style.color = nc.time;
+      el.querySelector('.note-body').style.color = nc.text;
+      el.querySelectorAll('.color-dot').forEach(d => d.classList.toggle('selected', parseInt(d.dataset.i) === i));
+      nd.ci = i;
+      localChange = true; scheduleSave();
+    });
+  });
+
+  ['.note-title','.note-time','.note-body'].forEach(sel => {
+    el.querySelector(sel).addEventListener('input', () => { localChange = true; scheduleSave(); });
+  });
+
+  setupDrag(el, nd);
+  canvas.appendChild(el);
+  applyLock(nd);
+  updateEmpty();
+  return nd;
+}
+
+function setupDrag(el, nd) {
+  let dragging = false, sx, sy, ox, oy;
+
+  function start(cx, cy) {
+    dragging = true;
+    sx = cx; sy = cy;
+    ox = parseInt(el.style.left) || 0;
+    oy = parseInt(el.style.top) || 0;
+    el.style.zIndex = ++zTop;
+    el.classList.add('dragging');
+  }
+  function move(cx, cy) {
+    if (!dragging) return;
+    el.style.left = (ox + cx - sx) + 'px';
+    el.style.top  = (oy + cy - sy) + 'px';
+  }
+  function end() {
+    if (!dragging) return;
+    dragging = false;
+    el.classList.remove('dragging');
+    localChange = true; scheduleSave();
+  }
+
+  el.addEventListener('mousedown', e => {
+    if (e.target.contentEditable === 'true' || e.target.classList.contains('del-btn') || e.target.classList.contains('color-dot')) return;
+    start(e.clientX, e.clientY); e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+  document.addEventListener('mouseup', end);
+
+  el.addEventListener('touchstart', e => {
+    if (e.target.contentEditable === 'true') return;
+    const t = e.touches[0]; start(t.clientX, t.clientY);
+  }, { passive: true });
+  el.addEventListener('touchmove', e => {
+    const t = e.touches[0]; move(t.clientX, t.clientY); e.preventDefault();
+  }, { passive: false });
+  el.addEventListener('touchend', end);
+}
+
+function updateEmpty() {
+  emptyState.style.display = Object.keys(notes).length === 0 ? 'block' : 'none';
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function uid() { return 'n' + Date.now() + Math.random().toString(36).slice(2,6); }
+
+addBtn.addEventListener('click', () => {
+  const rots = [-2.5,-1.5,-0.5,0.5,1.5,2.5,3];
+  makeNote({
+    id: uid(), title: '📝 새 메모', time: '시간 입력',
+    body: '내용을 입력하세요',
+    ci: Math.floor(Math.random() * COLORS.length),
+    x: 40 + Math.random() * 220,
+    y: 40 + Math.random() * 200,
+    rot: rots[Math.floor(Math.random() * rots.length)],
+    z: ++zTop,
+  });
+  if (locked) setLock(false);
+  localChange = true; scheduleSave();
+});
+
+async function init() {
+  setSyncBadge('saving');
+  try {
+    const snap = await getDoc(BOARD_DOC);
+    if (snap.exists() && snap.data().notes?.length) {
+      snap.data().notes.forEach(d => makeNote(d));
+    } else {
+      DEFAULTS.forEach(d => makeNote(d));
+      localChange = true;
+      await saveToFirebase();
+    }
+    setSyncBadge('saved');
+  } catch(e) {
+    console.error(e);
+    DEFAULTS.forEach(d => makeNote(d));
+    setSyncBadge('error');
+  }
+
+  onSnapshot(BOARD_DOC, snap => {
+    if (localChange) return;
+    if (!snap.exists()) return;
+    const incoming = snap.data();
+    if (!incoming.notes) return;
+    const currentIds = new Set(Object.keys(notes));
+    const incomingIds = new Set(incoming.notes.map(n => n.id));
+    currentIds.forEach(id => { if (!incomingIds.has(id)) { canvas.removeChild(notes[id].el); delete notes[id]; }});
+    incoming.notes.forEach(d => {
+      if (notes[d.id]) {
+        const el = notes[d.id].el;
+        el.style.left = d.x + 'px'; el.style.top = d.y + 'px';
+      } else {
+        makeNote(d);
+      }
+    });
+    updateEmpty();
+  });
+}
+
+init();
+</script>
+</body>
+</html>
